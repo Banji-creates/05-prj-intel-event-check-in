@@ -23,7 +23,7 @@ count++
 const maxCount = 50;
 
 //Handle Form Submission
-form.addEventListener ("Submit", function (event) {
+form.addEventListener ("submit", function (event) {
   event.preventDefault();
 
 //Get form value
