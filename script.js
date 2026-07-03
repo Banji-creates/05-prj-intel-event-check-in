@@ -4,23 +4,51 @@ const teamSelect = document.getElementById("teamSelect");
 
 const maxCount = 50;
 
-// Load saved attendance count
+// ----------------------
+// LOAD SAVED DATA
+// ----------------------
+
+// total count
 let count = localStorage.getItem("attendanceCount")
   ? parseInt(localStorage.getItem("attendanceCount"))
   : 0;
 
 document.getElementById("attendeeCount").textContent = count;
 
-// Load saved team counts
+// team counts
 const teams = ["water", "zero", "power"];
 
 teams.forEach(team => {
-  const savedCount = localStorage.getItem(team + "Count")
+  const saved = localStorage.getItem(team + "Count")
     ? parseInt(localStorage.getItem(team + "Count"))
     : 0;
 
-  document.getElementById(team + "Count").textContent = savedCount;
+  document.getElementById(team + "Count").textContent = saved;
 });
+
+// attendee list
+let attendeeList = localStorage.getItem("attendeeList")
+  ? JSON.parse(localStorage.getItem("attendeeList"))
+  : [];
+
+const listElement = document.getElementById("attendeeList");
+
+// render saved list
+function renderList() {
+  listElement.innerHTML = "";
+
+  attendeeList.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.name} — ${item.team}`;
+    listElement.appendChild(li);
+  });
+}
+
+renderList();
+
+// ----------------------
+// FORM SUBMIT
+// ----------------------
 
 form.addEventListener("submit", function (event) {
   event.preventDefault();
@@ -29,26 +57,36 @@ form.addEventListener("submit", function (event) {
   const team = teamSelect.value;
   const teamName = teamSelect.selectedOptions[0].text;
 
-  // Increment total count
+  // update total count
   count++;
   localStorage.setItem("attendanceCount", count);
-
   document.getElementById("attendeeCount").textContent = count;
 
-  // Update progress bar
+  // progress bar
   const progress = (count / maxCount) * 100;
   document.getElementById("progressBar").style.width = progress + "%";
 
-  // Update team count
+  // update team count
   const teamCounter = document.getElementById(team + "Count");
   const newTeamCount = parseInt(teamCounter.textContent) + 1;
 
   teamCounter.textContent = newTeamCount;
   localStorage.setItem(team + "Count", newTeamCount);
 
-  console.log(`🎉 welcome ${name} from ${teamName}`);
+  // ----------------------
+  // SAVE ATTENDEE LIST
+  // ----------------------
+  attendeeList.push({
+    name: name,
+    team: teamName
+  });
 
-  // 🎉 CELEBRATION LOGIC
+  localStorage.setItem("attendeeList", JSON.stringify(attendeeList));
+  renderList();
+
+  // ----------------------
+  // CELEBRATION FEATURE
+  // ----------------------
   if (count >= maxCount) {
     const water = parseInt(document.getElementById("waterCount").textContent);
     const zero = parseInt(document.getElementById("zeroCount").textContent);
@@ -58,18 +96,18 @@ form.addEventListener("submit", function (event) {
     let winningTeam = "";
 
     if (highest === water) {
-      winningTeam = "Team Water Wise 🌊";
+      winningTeam = "🌊 Team Water Wise";
     } else if (highest === zero) {
-      winningTeam = "Team Net Zero 🌿";
+      winningTeam = "🌿 Team Net Zero";
     } else {
-      winningTeam = "Team Renewables ⚡";
+      winningTeam = "⚡ Team Renewables";
     }
 
-    const celebrationMessage = document.getElementById("celebrationMessage");
-    celebrationMessage.textContent =
-      `🎉 Congratulations ${winningTeam}! You won with ${highest} attendees! 🏆`;
+    const celebration = document.getElementById("celebrationMessage");
+    celebration.textContent =
+      `🎉 Congratulations ${winningTeam}! They won with ${highest} attendees! 🏆`;
 
-    celebrationMessage.style.display = "block";
+    celebration.style.display = "block";
   }
 
   form.reset();
