@@ -5,10 +5,10 @@ const teamSelect = document.getElementById("teamSelect");
 const maxCount = 50;
 
 // ----------------------
-// LOAD SAVED DATA
+// LOAD DATA
 // ----------------------
 
-// total count
+// total attendance
 let count = localStorage.getItem("attendanceCount")
   ? parseInt(localStorage.getItem("attendanceCount"))
   : 0;
@@ -33,7 +33,7 @@ let attendeeList = localStorage.getItem("attendeeList")
 
 const listElement = document.getElementById("attendeeList");
 
-// render saved list
+// render function
 function renderList() {
   listElement.innerHTML = "";
 
@@ -45,6 +45,11 @@ function renderList() {
 }
 
 renderList();
+
+// prevent multiple celebrations
+let celebrationShown = localStorage.getItem("celebrationShown")
+  ? true
+  : false;
 
 // ----------------------
 // FORM SUBMIT
@@ -62,7 +67,7 @@ form.addEventListener("submit", function (event) {
   localStorage.setItem("attendanceCount", count);
   document.getElementById("attendeeCount").textContent = count;
 
-  // progress bar
+  // progress bar update
   const progress = (count / maxCount) * 100;
   document.getElementById("progressBar").style.width = progress + "%";
 
@@ -73,9 +78,7 @@ form.addEventListener("submit", function (event) {
   teamCounter.textContent = newTeamCount;
   localStorage.setItem(team + "Count", newTeamCount);
 
-  // ----------------------
-  // SAVE ATTENDEE LIST
-  // ----------------------
+  // add to attendee list
   attendeeList.push({
     name: name,
     team: teamName
@@ -87,7 +90,7 @@ form.addEventListener("submit", function (event) {
   // ----------------------
   // CELEBRATION FEATURE
   // ----------------------
-  if (count >= maxCount) {
+  if (count >= maxCount && !celebrationShown) {
     const water = parseInt(document.getElementById("waterCount").textContent);
     const zero = parseInt(document.getElementById("zeroCount").textContent);
     const power = parseInt(document.getElementById("powerCount").textContent);
@@ -108,6 +111,9 @@ form.addEventListener("submit", function (event) {
       `🎉 Congratulations ${winningTeam}! They won with ${highest} attendees! 🏆`;
 
     celebration.style.display = "block";
+
+    celebrationShown = true;
+    localStorage.setItem("celebrationShown", "true");
   }
 
   form.reset();
