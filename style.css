@@ -40,6 +40,15 @@ body {
   margin-bottom: 34px;
 }
 
+.celebration {
+  text-align: center;
+  color: #0071c5; /* Intel blue */
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-top: 15px;
+  display: none; /* Hidden until goal is reached */
+}
+
 .hero-content {
   max-width: 800px;
   margin: 0 auto;

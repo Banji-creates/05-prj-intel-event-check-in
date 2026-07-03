@@ -26,12 +26,17 @@ const percentage = Math.round((count / maxCount ) * 100) + "%";
 console.log(`Progress: ${percentage}`);
 
 //update team counter
-const teamCounter = document.getElementById(team + "count");
+const teamCounter = document.getElementById(team + "Count");
 teamCounter.textContent = parseInt(teamCounter.textContent) + 1;
 
 //Show Welcome Message
 const message = `🎉welcome, ${name} from ${teamName}`;
 console.log(message);
+
+//Show Celebration Message
+const celebrationMessage = document.getElementById("celebrationMessage");
+celebrationMessage.textContent = `🎉 Congratulations ${winningTeam}! You won with ${highest} attendees! 🏆`;
+celebration.style.display = "block";
 
 form.reset();
 
